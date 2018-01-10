@@ -31,6 +31,10 @@ import time
 PROBE_PACKET_ID_START = 37400
 PROBE_PACKET_ID_END = 37440 
 
+NUMBER_OF_PROBE_PACKETS = 40
+PROBE_PACKET_SIZE = 60
+
+
 class LinkCapacityEstimator(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
@@ -150,7 +154,8 @@ class LinkCapacityEstimator(app_manager.RyuApp):
             self.logger.info("packet-in data %s" % (pkt,))
             self.logger.info("Start Time : " + str(self.measure_start_time))
             self.logger.info("End Time : " + str(time.time()))
-            self.logger.info("Link Capacity: " + str((49*60)/(time.time() - self.measure_start_time)))
+            link_capacity = ((NUMBER_OF_PROBE_PACKETS - 1)  * PROBE_PACKET_SIZE ) / (time.time() - self.measure_start_time)
+            self.logger.info("Link Capacity: " + str(link_capacity))
 
         # construct packet_out message and send it.
         out = parser.OFPPacketOut(datapath=datapath,
